@@ -14,11 +14,28 @@ function convertPokeApiDetailToPokemon(pokeDetail){
 
     pokemon.photo = pokeDetail.sprites.other.dream_world.front_default
 
+    pokemon.height = pokeDetail.height/10;
+    pokemon.weight = pokeDetail.weight/10;
+
+    const abilities = pokeDetail.abilities.map((abilitySlot) => abilitySlot.ability.name)
+    const [ability] = abilities
+
+    pokemon.abilities = abilities;
+    pokemon.ability = ability
+
     return pokemon
 }
 
 pokeApi.getPokemonDetail = (pokemon) => {
     return fetch(pokemon.url)
+        .then((response) => response.json())
+        .then(convertPokeApiDetailToPokemon)
+}
+
+pokeApi.searchPokemon = (id) => {
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+
+    return fetch(url)
         .then((response) => response.json())
         .then(convertPokeApiDetailToPokemon)
 }
